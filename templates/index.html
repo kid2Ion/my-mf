@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my-mf</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Generated UUID</h1>
+        <p id="uuid">{{.UUID}}</p>
+        <button onclick="generateUUID()">Generate New UUID</button>
+    </div>
+    <script>
+        async function generateUUID() {
+            const oldUUID = document.getElementById('uuid').innerText;
+            const res = await fetch('/uuid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ uuid: oldUUID })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('uuid').innerText = data.uuid;
+            } else {
+                alert('Failed to generate new UUID')
+            }
+        }
+    </script>
+</body>
+</html>
