@@ -45,6 +45,9 @@ func main() {
 		}
 		return c.Render(http.StatusOK, "index.html", data)
 	})
+	e.GET("/about", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "about.html", nil)
+	})
 	e.POST("/uuid", func(c echo.Context) error {
 		req := new(UUIDreq)
 		if err := c.Bind(req); err != nil {
