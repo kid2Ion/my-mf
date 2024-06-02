@@ -14,6 +14,8 @@
             <button type="submit">Submit Category</button>
         </form>
         <a href="/">Go back to Home</a>
+        <h2>category list</h2>
+        <ul id="category-list"></ul>
     </div>
     <script>
         async function submitCategory(event) {
@@ -31,6 +33,23 @@
                 alert('Fauled to submit category');
             }
         }
+        async function fetchCategories() {
+            const res = await fetch('/category/get-all');
+            if (res.ok) {
+                const categories = await res.json();
+                const categoryList = document.getElementById('category-list');
+                categoryList.innerHTML = '';
+                categories.forEach(category => {
+                    const li = document.createElement('li');
+                    li.textContent = `${category.name}`;
+                    categoryList.appendChild(li);
+                });
+            } else {
+                alert('failed to fetch categories');
+            }
+        }
+        // reload でカテゴリー取得
+        window.onload = fetchCategories;
     </script>
 </body>
 </html>

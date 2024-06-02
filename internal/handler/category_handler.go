@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"my-mf/internal/usecase"
 	"net/http"
 
@@ -16,6 +15,7 @@ type (
 	}
 	CategoryHandler interface {
 		Create() echo.HandlerFunc
+		GetAll() echo.HandlerFunc
 	}
 )
 
@@ -30,9 +30,20 @@ func (t *categoryHandler) Create() echo.HandlerFunc {
 			slog.Error("failed to bind: %s", err.Error())
 			return c.JSON(http.StatusBadRequest, err)
 		}
-		fmt.Println("---")
-		fmt.Println(req)
-		fmt.Println("---")
+		err := t.usecase.Create(req)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
 		return c.JSON(http.StatusOK, nil)
+	}
+}
+
+func (t *categoryHandler) GetAll() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		res, err := t.usecase.GetAll()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
+		return c.JSON(http.StatusOK, res)
 	}
 }

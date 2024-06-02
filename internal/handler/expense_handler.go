@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"my-mf/internal/usecase"
 	"net/http"
 
@@ -30,9 +29,10 @@ func (t *expenseHandler) Create() echo.HandlerFunc {
 			slog.Error("failed to bind: %s", err.Error())
 			return c.JSON(http.StatusBadRequest, err)
 		}
-		fmt.Println("---")
-		fmt.Println(req)
-		fmt.Println("---")
+		err := t.usecase.Create(req)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err)
+		}
 		return c.JSON(http.StatusOK, nil)
 	}
 }

@@ -22,11 +22,16 @@ func injectCategoryInfra() infra.CategoryInfra {
 	sh := injectDB()
 	return infra.NewCategoryInfra(sh)
 }
+func injectRelExpenseCategoryInfra() infra.RelExpensesCategoriesInfra {
+	sh := injectDB()
+	return infra.NewRelExpensesCategoriesInfra(sh)
+}
 
 // repository
 func injectExpenseRepository() repository.ExpenseRepository {
 	ei := injectExpenseInfra()
-	return repository.NewExpenseRepository(ei)
+	rr := injectRelExpenseCategoryInfra()
+	return repository.NewExpenseRepository(ei, rr)
 }
 func injectCategoryRepository() repository.CategoryRepository {
 	ci := injectCategoryInfra()

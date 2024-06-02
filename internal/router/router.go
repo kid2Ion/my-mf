@@ -26,4 +26,5 @@ func InitExpenseRouter(e *echo.Echo) {
 func InitCategoryRouter(e *echo.Echo) {
 	handler := di.InjectCategoryHandler()
 	e.POST("category/create", handler.Create())
+	e.GET("category/get-all", handler.GetAll())
 }
