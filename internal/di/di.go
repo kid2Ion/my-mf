@@ -18,11 +18,19 @@ func injectExpenseInfra() infra.ExpenseInfra {
 	sh := injectDB()
 	return infra.NewExpenseInfra(sh)
 }
+func injectCategoryInfra() infra.CategoryInfra {
+	sh := injectDB()
+	return infra.NewCategoryInfra(sh)
+}
 
 // repository
 func injectExpenseRepository() repository.ExpenseRepository {
 	ei := injectExpenseInfra()
 	return repository.NewExpenseRepository(ei)
+}
+func injectCategoryRepository() repository.CategoryRepository {
+	ci := injectCategoryInfra()
+	return repository.NewCategoryRepository(ci)
 }
 
 // usecase
@@ -30,9 +38,17 @@ func injectExpenseUsecase() usecase.ExpenseUsecase {
 	er := injectExpenseRepository()
 	return usecase.NewExpenseUsecase(er)
 }
+func injectCategoryUsecase() usecase.CategoryUsecase {
+	cu := injectCategoryRepository()
+	return usecase.NewCategoryUsecase(cu)
+}
 
 // handler
 func InjectExpenseHandler() handler.ExpenseHandler {
 	eu := injectExpenseUsecase()
 	return handler.NewExpenseHandler(eu)
+}
+func InjectCategoryHandler() handler.CategoryHandler {
+	ch := injectCategoryUsecase()
+	return handler.NewCategoryHandler(ch)
 }

@@ -7,26 +7,32 @@
 </head>
 <body>
     <div class="container">
-        <h1>Generated UUID</h1>
-        <p id="uuid">{{.UUID}}</p>
-        <button onclick="generateUUID()">Generate New UUID</button>
-        <a href="/about">Go to About Page</a>
+        <h1>支払い作成</h1>
+        <form id="expense-form" onsubmit="submitExpense(event)">
+            <label for="expense-title">Title:</label>
+            <input type="text" id="expense-title" name="expense-title" required>
+            <label for="expense-amount">Amount:</label>
+            <input type="number" id="expense-amount" name="expense-amount">
+            <button type="submit">Submit Expense</button>
+        </form>
+        <a href="/category">Go to Category Page</a>
     </div>
     <script>
-        async function generateUUID() {
-            const oldUUID = document.getElementById('uuid').innerText;
+        async function submitExpense(event) {
+            event.preventDefault();
+            const title = document.getElementById('expense-title').value;
+            const amount = document.getElementById('expense-amount').value;
+
             const res = await fetch('/expense/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ uuid: oldUUID })
-            });
-            if (res.ok) {
-                const data = await res.json();
-                document.getElementById('uuid').innerText = data.uuid;
-            } else {
-                alert('Failed to generate new UUID')
+                body: JSON.stringify({ title, amount })
+            })
+
+            if (!response.ok) {
+                alert('Failed to submit expense')
             }
         }
     </script>

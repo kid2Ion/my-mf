@@ -11,21 +11,21 @@ import (
 )
 
 type (
-	expenseHandler struct {
-		usecase usecase.ExpenseUsecase
+	categoryHandler struct {
+		usecase usecase.CategoryUsecase
 	}
-	ExpenseHandler interface {
+	CategoryHandler interface {
 		Create() echo.HandlerFunc
 	}
 )
 
-func NewExpenseHandler(expenseUsecase usecase.ExpenseUsecase) ExpenseHandler {
-	return &expenseHandler{usecase: expenseUsecase}
+func NewCategoryHandler(categoryUsecase usecase.CategoryUsecase) CategoryHandler {
+	return &categoryHandler{usecase: categoryUsecase}
 }
 
-func (t *expenseHandler) Create() echo.HandlerFunc {
+func (t *categoryHandler) Create() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		req := new(usecase.ExpenseCreateReq)
+		req := new(usecase.CategoryCreateReq)
 		if err := c.Bind(req); err != nil {
 			slog.Error("failed to bind: %s", err.Error())
 			return c.JSON(http.StatusBadRequest, err)

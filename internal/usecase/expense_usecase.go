@@ -9,6 +9,10 @@ type (
 	ExpenseUsecase interface {
 		Create() error
 	}
+	ExpenseCreateReq struct {
+		Title  string `json:"title"`
+		Amount string `json:"amount"`
+	}
 )
 
 func NewExpenseUsecase(expenseRepository repository.ExpenseRepository) ExpenseUsecase {

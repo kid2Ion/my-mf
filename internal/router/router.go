@@ -1,30 +1,29 @@
 package router
 
 import (
-	"my-mf/internal/handler"
+	"my-mf/internal/di"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo"
 )
 
 func InitTemplateRouter(e *echo.Echo) {
 	e.GET("/", func(c echo.Context) error {
-		id := uuid.New()
-		data := struct {
-			UUID string
-		}{
-			UUID: id.String(),
-		}
-		return c.Render(http.StatusOK, "index.html", data)
+		return c.Render(http.StatusOK, "index.html", nil)
 	})
-	e.GET("/about", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "about.html", nil)
+	e.GET("/category", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "category.html", nil)
 	})
 }
 
-// まずは支出(expenses)をcreate, get
-// まずは動くようにしよう。その後設計調べて修正していこう
-func InitExpenseRouter(e *echo.Echo, handler handler.ExpenseHandler) {
+// expense
+func InitExpenseRouter(e *echo.Echo) {
+	handler := di.InjectExpenseHandler()
 	e.POST("expense/create", handler.Create())
+}
+
+// category
+func InitCategoryRouter(e *echo.Echo) {
+	handler := di.InjectCategoryHandler()
+	e.POST("category/create", handler.Create())
 }

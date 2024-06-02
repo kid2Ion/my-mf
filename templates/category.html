@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Page</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>category Page</h1>
+        <form id="category-form" onsubmit="submitCategory(event)">
+            <label for="category-name">Category Name:</label>
+            <input type="text" id="category-name" name="category-name" required>
+            <button type="submit">Submit Category</button>
+        </form>
+        <a href="/">Go back to Home</a>
+    </div>
+    <script>
+        async function submitCategory(event) {
+            event.preventDefault();
+            const name = document.getElementById('category-name').value;
+            const res = await fetch('/category/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name })
+            });
+
+            if (!res.ok) {
+                alert('Fauled to submit category');
+            }
+        }
+    </script>
+</body>
+</html>

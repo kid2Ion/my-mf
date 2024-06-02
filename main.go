@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 	"io"
-	"my-mf/internal/di"
 	"my-mf/internal/router"
 
 	"github.com/labstack/echo"
@@ -31,8 +30,11 @@ func main() {
 	}
 	e.Renderer = t
 
+	// template
 	router.InitTemplateRouter(e)
-	expenseHandler := di.InjectExpenseHandler()
-	router.InitExpenseRouter(e, expenseHandler)
+
+	// domain
+	router.InitExpenseRouter(e)
+	router.InitCategoryRouter(e)
 	e.Start(":8080")
 }
