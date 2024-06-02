@@ -15,7 +15,7 @@
     <script>
         async function generateUUID() {
             const oldUUID = document.getElementById('uuid').innerText;
-            const res = await fetch('/uuid', {
+            const res = await fetch('/expense/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
