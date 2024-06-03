@@ -1,7 +1,8 @@
 package infra
 
 import (
-	"my-mf/internal/domain/model"
+	"my-mf/adapter"
+	"my-mf/domain/model"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,11 +15,11 @@ type (
 		GetAll() ([]model.Category, error)
 	}
 	categoryInfra struct {
-		SqlHandler
+		adapter.SqlHandler
 	}
 )
 
-func NewCategoryInfra(sh SqlHandler) CategoryInfra {
+func NewCategoryInfra(sh adapter.SqlHandler) CategoryInfra {
 	return &categoryInfra{SqlHandler: sh}
 }
 

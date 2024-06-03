@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"my-mf/internal/domain/model"
-	"my-mf/internal/domain/repository"
+	"my-mf/domain/model"
+	"my-mf/domain/repository"
 )
 
 type (

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"my-mf/internal/usecase"
+	"my-mf/usecase"
 	"net/http"
 
 	"golang.org/x/exp/slog"

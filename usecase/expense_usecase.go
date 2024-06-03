@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"log/slog"
-	"my-mf/internal/domain/model"
-	"my-mf/internal/domain/repository"
+	"my-mf/domain/model"
+	"my-mf/domain/repository"
 	"strconv"
 
 	"github.com/google/uuid"
@@ -32,13 +32,13 @@ func (t *expenseUsecase) Create(req *ExpenseCreateReq) error {
 		slog.Error("failed to convert amount", err)
 		return err
 	}
-	e := model.NewExpense(intA)
 	cUUID, err := uuid.Parse(req.CategoryID)
 	if err != nil {
 		slog.Error("failed to parse category uuid")
 		return err
 	}
-	err = t.repo.Create(e, cUUID)
+	e := model.NewExpense(intA, cUUID)
+	err = t.repo.Create(e)
 	if err != nil {
 		return err
 	}

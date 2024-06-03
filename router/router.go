@@ -1,7 +1,7 @@
 package router
 
 import (
-	"my-mf/internal/di"
+	"my-mf/di"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -27,4 +27,12 @@ func InitCategoryRouter(e *echo.Echo) {
 	handler := di.InjectCategoryHandler()
 	e.POST("category/create", handler.Create())
 	e.GET("category/get-all", handler.GetAll())
+}
+
+// CQRSを採用。集約を跨ぐqueryが必要な際にはこちら
+// query
+// expense
+func InitQueryExpense(e *echo.Echo) {
+	handler := di.InjectQueryExpenseHandler()
+	e.GET("expense/get-all-in-this-month", handler.GetAllExpensesInThisMonth())
 }

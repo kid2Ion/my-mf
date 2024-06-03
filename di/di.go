@@ -1,15 +1,17 @@
 package di
 
 import (
-	"my-mf/internal/domain/repository"
-	"my-mf/internal/handler"
-	"my-mf/internal/infra"
-	"my-mf/internal/usecase"
+	"my-mf/adapter"
+	"my-mf/domain/repository"
+	"my-mf/handler"
+	"my-mf/infra"
+	query_expense "my-mf/query/expense"
+	"my-mf/usecase"
 )
 
 // sqlHansler
-func injectDB() infra.SqlHandler {
-	sh := infra.NewSqlHandler()
+func injectDB() adapter.SqlHandler {
+	sh := adapter.NewSqlHandler()
 	return *sh
 }
 
@@ -22,16 +24,11 @@ func injectCategoryInfra() infra.CategoryInfra {
 	sh := injectDB()
 	return infra.NewCategoryInfra(sh)
 }
-func injectRelExpenseCategoryInfra() infra.RelExpensesCategoriesInfra {
-	sh := injectDB()
-	return infra.NewRelExpensesCategoriesInfra(sh)
-}
 
 // repository
 func injectExpenseRepository() repository.ExpenseRepository {
 	ei := injectExpenseInfra()
-	rr := injectRelExpenseCategoryInfra()
-	return repository.NewExpenseRepository(ei, rr)
+	return repository.NewExpenseRepository(ei)
 }
 func injectCategoryRepository() repository.CategoryRepository {
 	ci := injectCategoryInfra()
@@ -56,4 +53,19 @@ func InjectExpenseHandler() handler.ExpenseHandler {
 func InjectCategoryHandler() handler.CategoryHandler {
 	ch := injectCategoryUsecase()
 	return handler.NewCategoryHandler(ch)
+}
+
+// query
+// expense
+func injectQueryExpenseDataAccessor() query_expense.DataAccessor {
+	qh := injectDB()
+	return query_expense.NewDataAccessor(qh)
+}
+func injectQueryExpenseUsecase() query_expense.Usecase {
+	qeda := injectQueryExpenseDataAccessor()
+	return query_expense.NewUsecase(qeda)
+}
+func InjectQueryExpenseHandler() query_expense.Handler {
+	qeu := injectQueryExpenseUsecase()
+	return query_expense.NewHandler(qeu)
 }

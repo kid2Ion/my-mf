@@ -17,6 +17,10 @@
             </select>
             <button type="submit">Submit Expense</button>
         </form>
+        <h2>今月の支出</h2>
+        <ul id="expense-list">
+            <!-- Expenses will be populated by JavaScript -->
+        </ul>
         <a href="/category">Go to Category Page</a>
     </div>
     <script>
@@ -36,6 +40,21 @@
                 alert('failed to fetch categories');
             }
         }
+        async function fetchExpenses() {
+            const res = await fetch('/expense/get-all-in-this-month');
+            if (res.ok) {
+                const expenses = await res.json();
+                const expenseList = document.getElementById('expense-list');
+                expenseList.innerHTML = '';
+                expenses.forEach(expense => {
+                    const li = document.createElement('li');
+                    li.textContent = `${expense.amount}円 - ${expense.category.name}`;
+                    expenseList.appendChild(li);
+                });
+            } else {
+                alert('failed to fetch expenses');
+            }
+        }
         async function submitExpense(event) {
             event.preventDefault();
             const amount = document.getElementById('expense-amount').value;
@@ -49,11 +68,16 @@
                 body: JSON.stringify({ amount, category_id: categoryID })
             });
 
-            if (!response.ok) {
-                alert('Failed to submit expense')
+            if (res.ok) {
+                fetchExpenses();
+            } else {
+                alert('Failed to submit expense');
             }
         }
-        window.onload = fetchCategories;
+        window.onload = () => {
+            fetchCategories();
+            fetchExpenses();
+        }
     </script>
 </body>
 </html>

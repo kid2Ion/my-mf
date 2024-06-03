@@ -29,7 +29,9 @@
                 body: JSON.stringify({ name })
             });
 
-            if (!res.ok) {
+            if (res.ok) {
+                fetchCategories();
+            } else {
                 alert('Fauled to submit category');
             }
         }

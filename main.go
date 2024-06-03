@@ -3,7 +3,7 @@ package main
 import (
 	"html/template"
 	"io"
-	"my-mf/internal/router"
+	"my-mf/router"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -36,5 +36,7 @@ func main() {
 	// domain
 	router.InitExpenseRouter(e)
 	router.InitCategoryRouter(e)
+	// query
+	router.InitQueryExpense(e)
 	e.Start(":8080")
 }

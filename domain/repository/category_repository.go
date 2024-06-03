@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"my-mf/internal/domain/model"
-	"my-mf/internal/infra"
+	"my-mf/domain/model"
+	"my-mf/infra"
 )
 
 type (
