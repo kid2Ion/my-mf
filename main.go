@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"log/slog"
 	"my-mf/router"
 	"net/http"
 	"os"
@@ -49,6 +50,7 @@ func main() {
 		return func(c echo.Context) error {
 			ip := c.RealIP()
 			if _, allowed := allowedIPs[ip]; !allowed {
+				slog.Error("Access denied: %s", ip)
 				return c.JSON(http.StatusForbidden, map[string]string{
 					"message": "Access denied",
 				})
