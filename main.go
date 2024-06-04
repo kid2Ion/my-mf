@@ -4,15 +4,17 @@ import (
 	"html/template"
 	"io"
 	"log"
-	"log/slog"
 	"my-mf/router"
 	"net/http"
 	"os"
 
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
+
+var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_SECRET_KEY")))
 
 type Template struct {
 	templates *template.Template
@@ -41,24 +43,34 @@ func main() {
 			log.Fatal("Error loading .env file")
 		}
 	}
-	allowedIPs := map[string]bool{
-		os.Getenv(("IP1")): true,
-		os.Getenv(("IP2")): true,
-		os.Getenv(("IP3")): true,
-	}
-	ipRestrictionMiddleware := func(next echo.HandlerFunc) echo.HandlerFunc {
+	// session認証
+	// session無限なっている（謎）
+	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		envUsername := os.Getenv("BASIC_AUTH_USERNAME")
+		envPassword := os.Getenv("BASIC_AUTH_PASSWORD")
+		if username == envUsername && password == envPassword {
+			session, _ := store.Get(c.Request(), os.Getenv("SESSION_SECRET_NAME"))
+			session.Values["authenticated"] = true
+			session.Options = &sessions.Options{
+				MaxAge: 5,
+			}
+			session.Save(c.Request(), c.Response())
+			return true, nil
+		}
+		return false, nil
+	}))
+	// session検証
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			ip := c.RealIP()
-			if _, allowed := allowedIPs[ip]; !allowed {
-				slog.Error("Access denied: %s", ip)
-				return c.JSON(http.StatusForbidden, map[string]string{
-					"message": "Access denied",
+			session, _ := store.Get(c.Request(), os.Getenv("SESSION_SECRET_NAME"))
+			if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+				return c.JSON(http.StatusUnauthorized, map[string]string{
+					"message": "unauthorized",
 				})
 			}
 			return next(c)
 		}
-	}
-	e.Use(ipRestrictionMiddleware)
+	})
 
 	// template
 	router.InitTemplateRouter(e)

@@ -4,7 +4,7 @@ import (
 	"my-mf/di"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func InitTemplateRouter(e *echo.Echo) {
