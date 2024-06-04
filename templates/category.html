@@ -18,6 +18,7 @@
         <ul id="category-list"></ul>
     </div>
     <script>
+        // categoryを作成する
         async function submitCategory(event) {
             event.preventDefault();
             const name = document.getElementById('category-name').value;
@@ -35,6 +36,7 @@
                 alert('Fauled to submit category');
             }
         }
+        // categoryを全件取得して、ページ下部に表示する
         async function fetchCategories() {
             const res = await fetch('/category/get-all');
             if (res.ok) {

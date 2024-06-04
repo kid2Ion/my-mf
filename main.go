@@ -3,8 +3,12 @@ package main
 import (
 	"html/template"
 	"io"
+	"log"
 	"my-mf/router"
+	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -29,6 +33,30 @@ func main() {
 		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 	e.Renderer = t
+
+	if os.Getenv("GO_EXEC_ENV") == "local" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	}
+	allowedIPs := map[string]bool{
+		os.Getenv(("IP1")): true,
+		os.Getenv(("IP2")): true,
+		os.Getenv(("IP3")): true,
+	}
+	ipRestrictionMiddleware := func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			ip := c.RealIP()
+			if _, allowed := allowedIPs[ip]; !allowed {
+				return c.JSON(http.StatusForbidden, map[string]string{
+					"message": "Access denied",
+				})
+			}
+			return next(c)
+		}
+	}
+	e.Use(ipRestrictionMiddleware)
 
 	// template
 	router.InitTemplateRouter(e)

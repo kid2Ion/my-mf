@@ -24,6 +24,7 @@
         <a href="/category">Go to Category Page</a>
     </div>
     <script>
+        // categoryを全取得して、セレクトボックスに表示する
         async function fetchCategories() {
             const res = await fetch('/category/get-all');
             if (res.ok) {
@@ -40,6 +41,7 @@
                 alert('failed to fetch categories');
             }
         }
+        // expenseを全件取得して、ページ下部に表示する
         async function fetchExpenses() {
             const res = await fetch('/expense/get-all-in-this-month');
             if (res.ok) {
@@ -55,6 +57,7 @@
                 alert('failed to fetch expenses');
             }
         }
+        // expenseを作成する
         async function submitExpense(event) {
             event.preventDefault();
             const amount = document.getElementById('expense-amount').value;
