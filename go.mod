@@ -7,7 +7,7 @@ require (
 	github.com/gorilla/sessions v1.2.2
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.9.0
-	github.com/mattn/go-sqlite3 v1.14.22
+	github.com/lib/pq v1.10.9
 	golang.org/x/exp v0.0.0-20240531132922-fd00a4e0eefc
 )
 

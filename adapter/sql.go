@@ -2,8 +2,10 @@ package adapter
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
 type SqlHandler struct {
@@ -11,7 +13,10 @@ type SqlHandler struct {
 }
 
 func NewSqlHandler() *SqlHandler {
-	conn, err := sql.Open("sqlite3", "db/my-mf.db")
+	connStr := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PW"),
+		os.Getenv("POSTGRES_DB"), os.Getenv("POSTGRES_PORT"))
+	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
 	}
