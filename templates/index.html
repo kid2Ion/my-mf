@@ -3,25 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>my-mf</title>
 </head>
-<body>
-    <div class="container">
-        <h1>支払い作成</h1>
-        <form id="expense-form" onsubmit="submitExpense(event)">
-            <label for="expense-amount">Amount:</label>
-            <input type="number" id="expense-amount" name="expense-amount">
-            <label for="expense-category">Category:</label>
-            <select name="expense-category" id="expense-category" required>
-                <!-- Options will be populated by JavaScript -->
-            </select>
-            <button type="submit">Submit Expense</button>
+<body class="bg-stone-200 justify-center item-center w-100vh">
+    <div class="container bg-stone-200 flex flex-col gap-4 p-4">
+        <h1 class="text-center text-4xl text-neutral-600">expenses</h1>
+        <form class="flex flex-col gap-4" id="expense-form" onsubmit="submitExpense(event)">
+            <div>
+                <label class="text-neutral-600 min-w-0" for="expense-amount">Amount:</label>
+                <input class="rounded min-w-0" type="number" id="expense-amount" name="expense-amount">
+            </div>
+            <div>
+                <label class="text-neutral-600 min-w-0" for="expense-category">Category:</label>
+                <select class="rounded min-w-0" name="expense-category" id="expense-category" required>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            <div class="text-center">
+                <button class="rounded bg-neutral-300 py-2 px-2" type="submit">Submit</button>
+            </div>
         </form>
-        <h2>今月の支出</h2>
-        <ul id="expense-list">
-            <!-- Expenses will be populated by JavaScript -->
-        </ul>
-        <a href="/category">Go to Category Page</a>
+        <div class="flex flex-col gap-2 items-center border border-gray-300 rounded-lg p-4 m-4">
+            <h2 class="text-neutral-600 text-2xl bg-stone-400 w-full text-center">this month</h2>
+            <ul id="expense-list">
+                <!-- Expenses will be populated by JavaScript -->
+            </ul>
+        </div>
+        <div class="flex items-center flex-col">
+            <a class="rounded bg-neutral-300 p-2" href="/category">Go to Category Page</a>
+        </div>
     </div>
     <script>
         // categoryを全取得して、セレクトボックスに表示する
