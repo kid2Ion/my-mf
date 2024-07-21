@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <title>my-mf</title>
 </head>
 <body class="bg-stone-200 justify-center item-center w-100vh">
@@ -33,6 +34,12 @@
         <div class="flex items-center flex-col">
             <a class="rounded bg-neutral-300 p-2" href="/category">Go to Category Page</a>
         </div>
+        <div>
+            <canvas id="barChart"></canvas>
+        </div>
+        <div>
+            <canvas id="radarChart"></canvas>
+        </div>
     </div>
     <script>
         // categoryを全取得して、セレクトボックスに表示する
@@ -59,11 +66,18 @@
                 const expenses = await res.json();
                 const expenseList = document.getElementById('expense-list');
                 expenseList.innerHTML = '';
+                const categoryAmountMap = {};
                 expenses.forEach(expense => {
                     const li = document.createElement('li');
                     li.textContent = `${expense.amount}円 - ${expense.category.name}`;
                     expenseList.appendChild(li);
+                    if (categoryAmountMap[expense.category.name]) {
+                        categoryAmountMap[expense.category.name] += expense.amount;
+                    } else {
+                        categoryAmountMap[expense.category.name] = expense.amount;
+                    }
                 });
+                updateChart(categoryAmountMap)
             } else {
                 alert('failed to fetch expenses');
             }
@@ -88,10 +102,79 @@
                 alert('Failed to submit expense');
             }
         }
+        function updateChart(categoryAmountMap) {
+            const labels = Object.keys(categoryAmountMap);
+            const data = Object.values(categoryAmountMap);
+            barChart.data.labels = labels;
+            barChart.data.datasets[0].data = data;
+            barChart.update();
+            radarChart.data.labels = labels;
+            radarChart.data.datasets[0].data = data;
+            radarChart.update();
+        }
         window.onload = () => {
             fetchCategories();
             fetchExpenses();
         }
+        let barCtx = document.getElementById("barChart");
+        let barConfig = {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                data: [],
+                // label: '',
+                backgroundColor: [  // それぞれの棒の色を設定(dataの数だけ)
+                    '#ff0000',
+                    '#0000ff',
+                    '#ffff00',
+                    '#008000',
+                    '#800080',
+                    '#ffa500',
+                ],
+                borderWidth: 1,
+            }]
+            },
+        };
+        let barChart = new Chart(barCtx, barConfig);
+        let radarCtx = document.getElementById("radarChart");
+        let radarConfig = {
+            type: 'radar',
+            data: {
+                labels: [],
+                datasets: [{
+                    // label: '',
+                    data: [],
+                    // データライン
+                    borderColor: 'green',
+                    borderWidth: 2,
+                }],
+            },
+            options: {
+                scales: {
+                    r: {
+                        // 背景色
+                        backgroundColor: 'lightyellow',
+                        // グリッドライン
+                        grid: {
+                            color: 'lightseagreen',
+                        },
+                        // アングルライン
+                        angleLines: {
+                            color: 'brown',
+                        },
+                        // ポイントラベル
+                        pointLabels: {
+                            color: 'blue',
+                            backdropColor: '#ddf',
+                            backdropPadding: 5,
+                            padding: 20,
+                        },
+                    },
+                },
+            },
+        };
+        let radarChart = new Chart(radarCtx, radarConfig);
     </script>
 </body>
 </html>
